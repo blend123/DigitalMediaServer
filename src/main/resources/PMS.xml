@@ -9,13 +9,13 @@
 		<dlna:X_DLNADOC xmlns:dlna="urn:schemas-dlna-org:device-1-0">DMS-1.50</dlna:X_DLNADOC>
 		<dlna:X_DLNADOC xmlns:dlna="urn:schemas-dlna-org:device-1-0">M-DMS-1.50</dlna:X_DLNADOC>
 		<deviceType>urn:schemas-upnp-org:device:MediaServer:1</deviceType>
-		<friendlyName>Universal Media Server</friendlyName>
-		<manufacturer>UMS</manufacturer>
-		<manufacturerURL>http://www.universalmediaserver.com</manufacturerURL>
+		<friendlyName>Digital Media Server</friendlyName>
+		<manufacturer>Digital Media Server</manufacturer>
+		<manufacturerURL>http://www.digitalmediaserver.org</manufacturerURL>
 		<modelDescription>UPnP/AV 1.0 Compliant Media Server</modelDescription>
-		<modelName>UMS</modelName>
-		<modelNumber>01</modelNumber>
-		<modelURL>http://www.universalmediaserver.com</modelURL>
+		<modelName>Digital Media Server</modelName>
+		<modelNumber>1</modelNumber>
+		<modelURL>http://www.digitalmediaserver.org</modelURL>
 		<serialNumber/>
 		<UPC/>
 		<UDN>[uuid]</UDN>
@@ -24,14 +24,14 @@
 				<mimetype>image/png</mimetype>
 				<width>256</width>
 				<height>256</height>
-				<depth>24</depth>
+				<depth>32</depth>
 				<url>/images/icon-256.png</url>
 			</icon>
 			<icon>
 				<mimetype>image/png</mimetype>
 				<width>128</width>
 				<height>128</height>
-				<depth>24</depth>
+				<depth>32</depth>
 				<url>/images/icon-128.png</url>
 			</icon>
 			<icon>
@@ -45,7 +45,7 @@
 				<mimetype>image/png</mimetype>
 				<width>120</width>
 				<height>120</height>
-				<depth>24</depth>
+				<depth>32</depth>
 				<url>/images/icon-120.png</url>
 			</icon>
 			<icon>
@@ -59,7 +59,7 @@
 				<mimetype>image/png</mimetype>
 				<width>48</width>
 				<height>48</height>
-				<depth>24</depth>
+				<depth>32</depth>
 				<url>/images/icon-48.png</url>
 			</icon>
 			<icon>

@@ -83,8 +83,8 @@ public class PMS {
 	private static final String PROFILES = "profiles";
 	private static final String PROFILE = "^(?i)profile(?::|=)([^\"*<>?]+)$";
 	private static final String TRACE = "trace";
-	public static final String NAME = "Universal Media Server";
-	public static final String CROWDIN_LINK = "https://crowdin.com/project/universalmediaserver";
+	public static final String NAME = "Digital Media Server";
+	public static final String CROWDIN_LINK = "http://crowdin.com/project/DigitalMediaServer";
 
 	/**
 	 * @deprecated The version has moved to the resources/project.properties file. Use {@link #getVersion()} instead.
@@ -278,8 +278,8 @@ public class PMS {
 	private void displayBanner() throws IOException {
 		LOGGER.debug("");
 		LOGGER.info("Starting " + PropertiesUtil.getProjectProperties().get("project.name") + " " + getVersion());
-		LOGGER.info("Based on PS3 Media Server by shagrath, copyright 2008-2014");
-		LOGGER.info("http://www.universalmediaserver.com");
+		LOGGER.info("Based on PS3 Media Server by shagrath and Universal Media Server");
+		LOGGER.info("http://www.digitalmediaserver.org");
 		LOGGER.info("");
 
 		String commitId = PropertiesUtil.getProjectProperties().get("git.commit.id");
