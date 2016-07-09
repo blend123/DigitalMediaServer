@@ -54,11 +54,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /*
- * This class handles the Windows-specific AviSynth/FFmpeg player combination. 
+ * This class handles the Windows-specific AviSynth/FFmpeg player combination.
  */
 public class AviSynthFFmpeg extends FFMpegVideo {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AviSynthFFmpeg.class);
-	public static final String ID = "avsffmpeg";
+	public static final String ID = "AvSFFmpeg";
 
 	@Override
 	public String id() {

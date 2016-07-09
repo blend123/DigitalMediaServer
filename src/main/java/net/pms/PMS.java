@@ -576,6 +576,7 @@ public class PMS {
 			@Override
 			public void configurationChanged(ConfigurationEvent event) {
 				if ((!event.isBeforeUpdate()) && PmsConfiguration.NEED_RELOAD_FLAGS.contains(event.getPropertyName())) {
+					//TODO - Shouldn't this be in the event dispatcher?
 					frame.setReloadable(true);
 				}
 			}
@@ -1555,11 +1556,6 @@ public class PMS {
 
 	public void addTempFile(File f, int cleanTime) {
 		tfm.add(f, cleanTime);
-	}
-
-	@Deprecated
-	public void registerPlayer(Player player) {
-		PlayerFactory.registerPlayer(player);
 	}
 
 	private static ReadWriteLock headlessLock = new ReentrantReadWriteLock();

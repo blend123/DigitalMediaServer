@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class RAWThumbnailer extends Player {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RAWThumbnailer.class);
-	public final static String ID = "rawthumbs";
+	public final static String ID = "RawThumbs";
 
 	protected String[] getDefaultArgs() {
 		return new String[]{ "-e", "-c" };
