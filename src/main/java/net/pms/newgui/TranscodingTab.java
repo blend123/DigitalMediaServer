@@ -39,6 +39,7 @@ import net.pms.encoders.Player;
 import net.pms.encoders.PlayerFactory;
 import net.pms.newgui.components.CustomJButton;
 import net.pms.newgui.components.CustomJComboBox;
+import net.pms.newgui.components.JImageButton;
 import net.pms.newgui.components.CustomJTextField;
 import net.pms.util.KeyedStringComboBoxModel;
 import net.pms.util.FormLayoutUtil;
@@ -116,29 +117,21 @@ public class TranscodingTab {
 	 * Revisions before that allowed only 8.
 	 */
 	private static final int MAX_CORES = 16;
-	private CustomJButton arrowDownButton;
-	private CustomJButton arrowUpButton;
-	private CustomJButton toggleButton;
+	private JImageButton arrowDownButton;
+	private JImageButton arrowUpButton;
+	private JImageButton toggleButton;
 	private static enum ToggleButtonState {
 		Unknown ("button-toggle-on_disabled.png"),
 		On ("button-toggle-on.png"),
 		Off ("button-toggle-off.png");
 
-		private final ImageIcon icon;
+		private final String iconName;
 		private ToggleButtonState(String name) {
-			ImageIcon tempIcon;
-			try {
-				tempIcon = LooksFrame.readImageIcon(name);
-			} catch (Exception e) {
-				LOGGER.error("Unexpected error in ToggleButtonState constructor: {}", e.getMessage());
-				LOGGER.trace("", e);
-				tempIcon = new ImageIcon();
-			}
-			icon = tempIcon;
+			iconName = name;
 		}
 
-		public ImageIcon getIcon() {
-			return icon;
+		public String getIconName() {
+			return iconName;
 		}
 	}
 
@@ -196,7 +189,7 @@ public class TranscodingTab {
 		{
 			arrowDownButton.setEnabled(false);
 			arrowUpButton.setEnabled(false);
-			toggleButton.setIcon(ToggleButtonState.Unknown.getIcon());
+			toggleButton.setIconName(ToggleButtonState.Unknown.getIconName());
 			toggleButton.setEnabled(false);
 		} else {
 			TreeNodeSettings node = (TreeNodeSettings) path.getLastPathComponent();
@@ -214,10 +207,10 @@ public class TranscodingTab {
 			}
 			Player player = node.getPlayer();
 			if (player.isEnabled()) {
-				toggleButton.setIcon(ToggleButtonState.On.getIcon());
+				toggleButton.setIconName(ToggleButtonState.On.getIconName());
 				toggleButton.setEnabled(true);
 			} else {
-				toggleButton.setIcon(ToggleButtonState.Off.getIcon());
+				toggleButton.setIconName(ToggleButtonState.Off.getIconName());
 				toggleButton.setEnabled(player.isAvailable());
 			}
 		}
@@ -232,7 +225,7 @@ public class TranscodingTab {
 
 		CellConstraints cc = new CellConstraints();
 
-		arrowDownButton = new CustomJButton(LooksFrame.readImageIcon("button-arrow-down.png"));
+		arrowDownButton = new JImageButton("button-arrow-down.png");
 		arrowDownButton.setToolTipText(Messages.getString("TrTab2.6"));
 		arrowDownButton.addActionListener(new ActionListener() {
 			@Override
@@ -261,7 +254,7 @@ public class TranscodingTab {
 		});
 		builder.add(arrowDownButton, FormLayoutUtil.flip(cc.xy(2, 3), colSpec, orientation));
 
-		arrowUpButton = new CustomJButton(LooksFrame.readImageIcon("button-arrow-up.png"));
+		arrowUpButton = new JImageButton("button-arrow-up.png");
 		arrowUpButton.setToolTipText(Messages.getString("TrTab2.6"));
 		arrowUpButton.addActionListener(new ActionListener() {
 			@Override
@@ -289,7 +282,7 @@ public class TranscodingTab {
 		});
 		builder.add(arrowUpButton, FormLayoutUtil.flip(cc.xy(3, 3), colSpec, orientation));
 
-		toggleButton = new CustomJButton();
+		toggleButton = new JImageButton();
 		toggleButton.setToolTipText(Messages.getString("TrTab2.0"));
 		setButtonsState();
 		toggleButton.addActionListener(new ActionListener() {

@@ -62,6 +62,7 @@ import net.pms.network.HTTPServer;
 import net.pms.network.ProxyServer;
 import net.pms.network.UPNPHelper;
 import net.pms.newgui.*;
+import net.pms.newgui.StatusTab.ConnectionState;
 import net.pms.remote.RemoteWeb;
 import net.pms.update.AutoUpdater;
 import net.pms.util.*;
@@ -198,7 +199,7 @@ public class PMS {
 			LOGGER.debug("Adding status button for " + renderer.getRendererName());
 			foundRenderers.add(renderer);
 			frame.addRenderer(renderer);
-			frame.setStatusCode(0, Messages.getString("PMS.18"), "icon-status-connected.png");
+			frame.setConnectionState(ConnectionState.CONNECTED);
 		}
 	}
 
@@ -576,7 +577,6 @@ public class PMS {
 			@Override
 			public void configurationChanged(ConfigurationEvent event) {
 				if ((!event.isBeforeUpdate()) && PmsConfiguration.NEED_RELOAD_FLAGS.contains(event.getPropertyName())) {
-					//TODO - Shouldn't this be in the event dispatcher?
 					frame.setReloadable(true);
 				}
 			}
@@ -626,7 +626,7 @@ public class PMS {
 			}
 		}
 
-		frame.setStatusCode(0, Messages.getString("PMS.130"), "icon-status-connecting.png");
+		frame.setConnectionState(ConnectionState.SEARCHING);
 
 		// Check the existence of VSFilter / DirectVobSub
 		if (registry.isAvis() && registry.getAvsPluginsDir() != null) {
@@ -731,9 +731,9 @@ public class PMS {
 				}
 
 				if (foundRenderers.isEmpty()) {
-					frame.setStatusCode(0, Messages.getString("PMS.0"), "icon-status-notconnected.png");
+					frame.setConnectionState(ConnectionState.DISCONNECTED);
 				} else {
-					frame.setStatusCode(0, Messages.getString("PMS.18"), "icon-status-connected.png");
+					frame.setConnectionState(ConnectionState.CONNECTED);
 				}
 			}
 		}.start();
