@@ -581,11 +581,6 @@ public class DLNAMediaInfo implements Cloneable {
 		String args[] = new String[15];
 		args[0] = getFfmpegPath();
 		File file = media.getFile();
-		boolean dvrms = file != null && file.getAbsolutePath().toLowerCase().endsWith("dvr-ms");
-
-		if (dvrms && isNotBlank(configuration.getFfmpegAlternativePath())) {
-			args[0] = configuration.getFfmpegAlternativePath();
-		}
 
 		args[1] = "-ss";
 		if (resume) {
@@ -615,7 +610,7 @@ public class DLNAMediaInfo implements Cloneable {
 
 		if (
 			!configuration.isThumbnailGenerationEnabled() ||
-			configuration.isUseMplayerForVideoThumbs() && !dvrms
+			configuration.isUseMplayerForVideoThumbs()
 		) {
 			args[2] = "0";
 			for (int i = 8; i <= 14; i++) {
@@ -664,7 +659,7 @@ public class DLNAMediaInfo implements Cloneable {
 	private ProcessWrapperImpl getMplayerThumbnail(InputFile media, boolean resume) throws IOException {
 		File file = media.getFile();
 		String args[] = new String[14];
-		args[0] = configuration.getMplayerPath();
+		args[0] = configuration.getMPlayerPath();
 		args[1] = "-ss";
 		if (resume) {
 			args[2] = "" + (int) getDurationInSeconds();
@@ -728,7 +723,7 @@ public class DLNAMediaInfo implements Cloneable {
 	}
 
 	private static String getFfmpegPath() {
-		String value = configuration.getFfmpegPath();
+		String value = configuration.getFFmpegPath();
 
 		if (value == null) {
 			LOGGER.info("No FFmpeg - unable to thumbnail");
@@ -1007,12 +1002,10 @@ public class DLNAMediaInfo implements Cloneable {
 					pw = getFFmpegThumbnail(inputFile, resume);
 				}
 
-				boolean dvrms = false;
 				String input = "-";
 
 				if (file != null) {
 					input = ProcessUtil.getShortFileNameIfWideChars(file.getAbsolutePath());
-					dvrms = file.getAbsolutePath().toLowerCase().endsWith("dvr-ms");
 				}
 
 				synchronized (ffmpeg_failureLock) {
@@ -1040,7 +1033,7 @@ public class DLNAMediaInfo implements Cloneable {
 					}
 				}
 
-				if (configuration.isUseMplayerForVideoThumbs() && type == Format.VIDEO && !dvrms) {
+				if (configuration.isUseMplayerForVideoThumbs() && type == Format.VIDEO) {
 					try {
 						getMplayerThumbnail(inputFile, resume);
 						String frameName = "" + inputFile.hashCode();
@@ -1983,7 +1976,7 @@ public class DLNAMediaInfo implements Cloneable {
 
 	public byte[][] getAnnexBFrameHeader(InputFile f) {
 		String[] cmdArray = new String[14];
-		cmdArray[0] = configuration.getFfmpegPath();
+		cmdArray[0] = configuration.getFFmpegPath();
 		cmdArray[1] = "-i";
 
 		if (f.getPush() == null && f.getFilename() != null) {
