@@ -834,12 +834,14 @@ public class FFMpegVideo extends Player {
 
 		/**
 		 * Defer to MEncoder for subtitles if:
+		 * - MEncoder is enabled and available
 		 * - The setting is enabled or embedded fonts exist
 		 * - There are subtitles to transcode
 		 * - The file is not being played via the transcode folder
 		 */
 		String prependTraceReason = "Switching from FFmpeg to MEncoder to transcode subtitles because ";
 		if (
+			PlayerFactory.isPlayerActive(MEncoderVideo.ID) &&
 			!(renderer instanceof RendererConfiguration.OutputOverride) &&
 			params.sid != null &&
 			!(
