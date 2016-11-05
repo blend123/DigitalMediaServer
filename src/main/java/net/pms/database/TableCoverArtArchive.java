@@ -83,7 +83,7 @@ public final class TableCoverArtArchive extends Tables{
 	}
 
 	private static String contructMBIDWhere(final String mBID) {
-		return " WHERE MBID" + nullIfBlank(mBID);
+		return " WHERE MBID" + sqlNullIfBlank(mBID, true, false);
 	}
 
 	/**
