@@ -75,6 +75,7 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("restriction")
 public class PMS {
 	private static final String SCROLLBARS = "scrollbars";
 	private static final String NATIVELOOK = "nativelook";
@@ -1108,7 +1109,7 @@ public class PMS {
 		if (args.length > 0) {
 			Pattern pattern = Pattern.compile(PROFILE);
 			for (String arg : args) {
-				switch (arg) {
+				switch (arg.toLowerCase()) {
 					case HEADLESS:
 					case CONSOLE:
 						forceHeadless();
