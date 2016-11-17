@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import su.litvak.chromecast.api.v2.ChromeCast;
-
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
@@ -84,7 +83,7 @@ public class ChromecastMgr implements ServiceListener {
 	static class ChromeDevice extends DeviceConfiguration {
 		public ChromeCast api;
 
-		public ChromeDevice(ChromeCast cc, RendererConfiguration r, InetAddress ia) throws ConfigurationException {
+		public ChromeDevice(ChromeCast cc, RendererConfiguration r, InetAddress ia) throws ConfigurationException, InterruptedException {
 			super(r, ia);
 			api = cc;
 			uuid = cc.getAddress();

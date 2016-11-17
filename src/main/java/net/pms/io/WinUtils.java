@@ -26,9 +26,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.util.prefs.Preferences;
-import net.pms.PMS;
-import net.pms.configuration.PmsConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WinUtils extends BasicSystemUtils {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WinUtils.class);
-	private static final PmsConfiguration configuration = PMS.getConfiguration();
 
 	public interface Kernel32 extends Library {
 		Kernel32 INSTANCE = (Kernel32) Native.loadLibrary("kernel32", Kernel32.class);
@@ -73,16 +71,17 @@ public class WinUtils extends BasicSystemUtils {
 	private boolean kerio;
 	private String avsPluginsDir;
 	private String kLiteFiltersDir;
-	public long lastDontSleepCall = 0;
-	public long lastGoToSleepCall = 0;
+	public volatile long lastDontSleepCall = 0;
+	public volatile long lastGoToSleepCall = 0;
 
 	/* (non-Javadoc)
 	 * @see net.pms.io.SystemUtils#disableGoToSleep()
 	 */
 	@Override
 	public void disableGoToSleep() {
+		//TODO: This has to be a bug
 		// Disable go to sleep (every 40s)
-		if (configuration.isPreventsSleep() && System.currentTimeMillis() - lastDontSleepCall > 40000) {
+		if (System.currentTimeMillis() - lastDontSleepCall > 40000) {
 			LOGGER.trace("Calling SetThreadExecutionState ES_SYSTEM_REQUIRED");
 			Kernel32.INSTANCE.SetThreadExecutionState(Kernel32.ES_SYSTEM_REQUIRED | Kernel32.ES_CONTINUOUS);
 			lastDontSleepCall = System.currentTimeMillis();
@@ -95,7 +94,7 @@ public class WinUtils extends BasicSystemUtils {
 	@Override
 	public void reenableGoToSleep() {
 		// Reenable go to sleep
-		if (configuration.isPreventsSleep() && System.currentTimeMillis() - lastGoToSleepCall > 40000) {
+		if (System.currentTimeMillis() - lastGoToSleepCall > 40000) {
 			LOGGER.trace("Calling SetThreadExecutionState ES_CONTINUOUS");
 			Kernel32.INSTANCE.SetThreadExecutionState(Kernel32.ES_CONTINUOUS);
 			lastGoToSleepCall = System.currentTimeMillis();
@@ -279,8 +278,10 @@ public class WinUtils extends BasicSystemUtils {
 				}
 				if (handles.length == 2 && handles[0] != 0 && handles[1] == 0) {
 					valb = (byte[]) winRegQueryValue.invoke(systemRoot, handles[0], toCstr(""));
-					vlcp = (valb != null ? new String(valb).trim() : null);
+					//TODO: The below is a bug, we need to know the OS charset but it isn't available because it's being overwritten to UTF-8 during startup
+					vlcp = (valb != null ? new String(valb,Charset.forName("cp1252")).trim() : null);
 					valb = (byte[]) winRegQueryValue.invoke(systemRoot, handles[0], toCstr("Version"));
+					//TODO: The below is a bug, same as above
 					vlcv = (valb != null ? new String(valb).trim() : null);
 					closeKey.invoke(systemRoot, handles[0]);
 				}
@@ -343,25 +344,6 @@ public class WinUtils extends BasicSystemUtils {
 
 	@Override
 	public String[] getPingCommand(String hostAddress, int count, int packetSize) {
-		String cmd = PMS.getConfiguration().pingPath();
-		if (cmd == null) {
-			return new String[]{"ping", /* count */ "-n", Integer.toString(count), /* size */ "-l", Integer.toString(packetSize), hostAddress};
-		} else {
-			return new String[]{cmd, /*warmup */ "-w", "0", "-i", "0", /* count */ "-n", Integer.toString(count), /* size */ "-l", Integer.toString(packetSize), hostAddress};
-		}
-
-	}
-
-	@Override
-	public String parsePingLine(String line) {
-		if (PMS.getConfiguration().pingPath() == null) {
-			return super.parsePingLine(line);
-		}
-		int msPos = line.indexOf("ms");
-
-		if (msPos == -1) {
-			return null;
-		}
-		return line.substring(line.lastIndexOf(':', msPos) + 1, msPos).trim();
+		return new String[]{"ping", /* count */ "-n", Integer.toString(count), /* size */ "-l", Integer.toString(packetSize), hostAddress};
 	}
 }

@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.pms.PMS;
+import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.external.StartStopListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 public class RequestHandlerV2 extends SimpleChannelUpstreamHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandlerV2.class);
+	private final PmsConfiguration configuration = PMS.getConfiguration();
 
 	private static final Pattern TIMERANGE_PATTERN = Pattern.compile(
 		"timeseekrange\\.dlna\\.org\\W*npt\\W*=\\W*([\\d.:]+)?-?([\\d.:]+)?",
@@ -102,7 +104,14 @@ public class RequestHandlerV2 extends SimpleChannelUpstreamHandler {
 		}
 
 		LOGGER.trace("Opened request handler on socket " + remoteAddress);
-		PMS.get().getRegistry().disableGoToSleep();
+
+		if (configuration.isPreventsSleep()) {
+			PMS.get().getRegistry().disableGoToSleep();
+			if (LOGGER.isTraceEnabled()) {
+				LOGGER.trace("Preventing sleep mode");
+			}
+		}
+
 		request = new RequestV2(nettyRequest.getMethod().getName(), nettyRequest.getUri().substring(1));
 		LOGGER.trace("Request: " + nettyRequest.getProtocolVersion().getText() + " : " + request.getMethod() + " : " + request.getArgument());
 

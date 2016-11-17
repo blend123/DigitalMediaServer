@@ -151,10 +151,11 @@ public class LoggingTest {
 
 	/**
 	 * Test
+	 * @throws InterruptedException
 	 *
 	 */
 	@Test
-	public void testDebugLogPropertyDefiner() throws ConfigurationException {
+	public void testDebugLogPropertyDefiner() throws ConfigurationException, InterruptedException {
 
 		// Set up PMS configuration
 		PMS.get();
@@ -177,7 +178,7 @@ public class LoggingTest {
 	}
 
 	@Test
-	public void testLoggingConfig() throws ConfigurationException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public void testLoggingConfig() throws ConfigurationException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException, InterruptedException {
 
 		// Set up a test (default) configuration
 		PMS.get();

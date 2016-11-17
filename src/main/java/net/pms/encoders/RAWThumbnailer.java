@@ -7,7 +7,9 @@ import java.io.InputStream;
 import javax.swing.JComponent;
 import net.pms.PMS;
 import net.pms.configuration.DeviceConfiguration;
+import net.pms.configuration.PlatformExecutableInfo;
 import net.pms.configuration.PmsConfiguration;
+import net.pms.configuration.ProgramExecutableType;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAResource;
 import net.pms.formats.Format;
@@ -35,6 +37,16 @@ public class RAWThumbnailer extends Player {
 	@Override
 	public JComponent config() {
 		return null;
+	}
+
+	@Override
+	public PlatformExecutableInfo executables() {
+		return configuration.getDCRawPaths();
+	}
+
+	@Override
+	public ProgramExecutableType getExecutableType() {
+		return configuration.getDCRawExecutableType();
 	}
 
 	@Override

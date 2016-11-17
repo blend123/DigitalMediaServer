@@ -51,7 +51,7 @@ public class DVDISOTitle extends DLNAResource {
 	@Override
 	protected void resolveOnce() {
 		String cmd[] = new String[] {
-			configuration.getMplayerPath(),
+			configuration.getMPlayerDefaultPath(),
 			"-identify",
 			"-endpos",
 			"0",

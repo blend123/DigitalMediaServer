@@ -28,6 +28,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 import net.pms.PMS;
+import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.external.StartStopListenerDelegate;
 import static net.pms.util.StringUtil.convertStringToTime;
@@ -37,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 public class RequestHandler implements Runnable {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);
+	private final PmsConfiguration configuration = PMS.getConfiguration();
 	public final static int SOCKET_BUF_SIZE = 32768;
 	private Socket socket;
 	private OutputStream output;
@@ -70,6 +72,7 @@ public class RequestHandler implements Runnable {
 		Request request = null;
 		StartStopListenerDelegate startStopListenerDelegate = new StartStopListenerDelegate(socket.getInetAddress().getHostAddress());
 
+		boolean preventSleepActive = false;
 		try {
 			int receivedContentLength = -1;
 			String userAgentString = null;
@@ -87,7 +90,14 @@ public class RequestHandler implements Runnable {
 			}
 
 			LOGGER.trace("Opened request handler on socket " + socket);
-			PMS.get().getRegistry().disableGoToSleep();
+
+			if (configuration.isPreventsSleep()) {
+				PMS.get().getRegistry().disableGoToSleep();
+				preventSleepActive = true;
+				if (LOGGER.isTraceEnabled()) {
+					LOGGER.trace("Preventing sleep mode");
+				}
+			}
 
 			// The handler makes a couple of attempts to recognize a renderer from its requests.
 			// IP address matches from previous requests are preferred, when that fails request
@@ -276,7 +286,9 @@ public class RequestHandler implements Runnable {
 			}
 		} finally {
 			try {
-				PMS.get().getRegistry().reenableGoToSleep();
+				if (preventSleepActive) {
+					PMS.get().getRegistry().reenableGoToSleep();
+				}
 				output.close();
 				br.close();
 				socket.close();

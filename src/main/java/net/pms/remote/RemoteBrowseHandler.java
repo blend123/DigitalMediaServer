@@ -33,7 +33,7 @@ public class RemoteBrowseHandler implements HttpHandler {
 		this.parent = parent;
 	}
 
-	private String mkBrowsePage(String id, HttpExchange t) throws IOException {
+	private String mkBrowsePage(String id, HttpExchange t) throws IOException, InterruptedException {
 		String user = RemoteUtil.userName(t);
 		RootFolder root = parent.getRoot(user, true, t);
 		String search = RemoteUtil.getQueryVars(t.getRequestURI().getQuery(), "str");

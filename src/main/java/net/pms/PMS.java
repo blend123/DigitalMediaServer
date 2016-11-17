@@ -237,10 +237,10 @@ public class PMS {
 	private IFrame frame;
 
 	/**
-	 * Interface to Windows-specific functions, like Windows Registry. registry is set by {@link #init()}.
+	 * Interface to Windows-specific functions, like Windows Registry.
 	 * @see net.pms.io.WinUtils
 	 */
-	private SystemUtils registry;
+	private final SystemUtils registry = createSystemUtils();
 
 	/**
 	 * @see net.pms.io.WinUtils
@@ -540,8 +540,6 @@ public class PMS {
 			autoUpdater = new AutoUpdater(serverURL, getVersion());
 		}
 
-		registry = createSystemUtils();
-
 		if (!isHeadless()) {
 			frame = new LooksFrame(autoUpdater, configuration);
 		} else {
@@ -612,7 +610,7 @@ public class PMS {
 		if (!configuration.isDisableSubtitles()) {
 			LOGGER.info("Checking the fontconfig cache in the background, this can take two minutes or so.");
 
-			ProcessWrapperImpl mplayer = new ProcessWrapperImpl(new String[]{configuration.getMplayerPath(), "dummy"}, outputParams);
+			ProcessWrapperImpl mplayer = new ProcessWrapperImpl(new String[]{configuration.getMPlayerDefaultPath(), "dummy"}, outputParams);
 			mplayer.runInNewThread();
 
 			/**
@@ -622,7 +620,7 @@ public class PMS {
 			 * This should result in all of the necessary caches being built.
 			 */
 			if (!Platform.isWindows() || Platform.is64Bit()) {
-				ProcessWrapperImpl ffmpeg = new ProcessWrapperImpl(new String[]{configuration.getFfmpegPath(), "-y", "-f", "lavfi", "-i", "nullsrc=s=720x480:d=1:r=1", "-vf", "ass=DummyInput.ass", "-target", "ntsc-dvd", "-"}, outputParams);
+				ProcessWrapperImpl ffmpeg = new ProcessWrapperImpl(new String[]{configuration.getFFmpegPath(), "-y", "-f", "lavfi", "-i", "nullsrc=s=720x480:d=1:r=1", "-vf", "ass=DummyInput.ass", "-target", "ntsc-dvd", "-"}, outputParams);
 				ffmpeg.runInNewThread();
 			}
 		}
@@ -1245,6 +1243,8 @@ public class PMS {
 					JOptionPane.ERROR_MESSAGE
 				);
 			}
+		} catch (InterruptedException e) {
+			// Interrupted during startup
 		}
 	}
 

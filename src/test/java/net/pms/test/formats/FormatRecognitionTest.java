@@ -59,10 +59,10 @@ public class FormatRecognitionTest {
 	private boolean mediaInfoParserIsValid;
 
 	@Before
-	public void setUp() throws ConfigurationException {
+	public void setUp() throws ConfigurationException, InterruptedException {
 		// Silence all log messages from the PMS code that is being tested
 		LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        context.reset(); 
+        context.reset();
 
 		PmsConfiguration pmsConf = null;
 
@@ -362,9 +362,10 @@ public class FormatRecognitionTest {
 	 * message.
 	 * <p>
 	 * This test verifies the case above.
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void testVirtualVideoActionInitializationCompatibility() {
+	public void testVirtualVideoActionInitializationCompatibility() throws InterruptedException {
 		boolean configurationLoaded = false;
 
 		try {
