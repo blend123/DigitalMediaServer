@@ -9,7 +9,6 @@ import net.pms.PMS;
 import net.pms.configuration.DeviceConfiguration;
 import net.pms.configuration.PlatformExecutableInfo;
 import net.pms.configuration.PmsConfiguration;
-import net.pms.configuration.ProgramExecutableType;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAResource;
 import net.pms.formats.Format;
@@ -23,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class RAWThumbnailer extends Player {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RAWThumbnailer.class);
-	public final static String ID = "RawThumbs";
+	public final static PlayerId ID = PlayerId.RAW_THUMBNAILER;
 
 	protected String[] getDefaultArgs() {
 		return new String[]{ "-e", "-c" };
@@ -45,17 +44,7 @@ public class RAWThumbnailer extends Player {
 	}
 
 	@Override
-	public ProgramExecutableType getExecutableType() {
-		return configuration.getDCRawExecutableType();
-	}
-
-	@Override
-	public String executable() {
-		return configuration.getDCRawPath();
-	}
-
-	@Override
-	public String id() {
+	public PlayerId id() {
 		return ID;
 	}
 
@@ -97,7 +86,7 @@ public class RAWThumbnailer extends Player {
 
 	@Override
 	public String name() {
-		return "dcraw Thumbnailer";
+		return ID.name();
 	}
 
 	@Override

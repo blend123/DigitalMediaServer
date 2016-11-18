@@ -162,7 +162,10 @@ public final class PlayerFactory {
 
 			LOGGER.info("Checking transcoding engine: {}", player);
 			players.add(player);
-			player.setEnabled(configuration.isEngineEnabled(player));
+			player.setEnabled(configuration.isEngineEnabled(player), false);
+
+			// TODO: Temporary implementation
+			player.setCurrentExecutableType(configuration.getExecutableType(player.id()), false);
 
 			if (player.executable() == null) {
 				player.setUnavailable(String.format(Messages.getString("Engine.ExecutableNotDefined"), player));
@@ -287,7 +290,7 @@ public final class PlayerFactory {
 	 * @param id the {@link Player} type to check for
 	 * @return the result
 	 */
-	public static boolean isPlayerActive(String id) {
+	public static boolean isPlayerActive(PlayerId id) {
 		if (id == null) {
 			throw new NullPointerException("id cannot be null");
 		}
@@ -355,6 +358,24 @@ public final class PlayerFactory {
 
 		LOGGER.trace("No player found for {}", resource.getName());
 
+		return null;
+	}
+
+	public static Player getPlayer(final PlayerId id) {
+		if (id == null) {
+			return null;
+		}
+
+		playersLock.readLock().lock();
+		try {
+			for (Player player : players) {
+				if (id.equals(player.id())) {
+					return player;
+				}
+			}
+		} finally {
+			playersLock.readLock().unlock();
+		}
 		return null;
 	}
 
