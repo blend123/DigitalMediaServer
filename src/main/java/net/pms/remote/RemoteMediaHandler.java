@@ -11,9 +11,8 @@ import net.pms.configuration.FormatConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.configuration.WebRender;
 import net.pms.dlna.*;
-import net.pms.encoders.FFMpegVideo;
-import net.pms.encoders.FFmpegAudio;
-import net.pms.encoders.FFmpegWebVideo;
+import net.pms.encoders.PlayerFactory;
+import net.pms.encoders.PlayerId;
 import net.pms.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,9 +91,9 @@ public class RemoteMediaHandler implements HttpHandler {
 				} else if (!RemoteUtil.directmime(mime) || RemoteUtil.transMp4(mime, m)) {
 					mime = render != null ? render.getVideoMimeType() : RemoteUtil.transMime();
 					if (FileUtil.isUrl(dlna.getSystemName())) {
-						dlna.setPlayer(new FFmpegWebVideo());
+						dlna.setPlayer(PlayerFactory.getPlayer(PlayerId.FFMPEG_WEB_VIDEO));
 					} else {
-						dlna.setPlayer(new FFMpegVideo());
+						dlna.setPlayer(PlayerFactory.getPlayer(PlayerId.FFMPEG_VIDEO));
 					}
 					//code = 206;
 				}
@@ -110,7 +109,7 @@ public class RemoteMediaHandler implements HttpHandler {
 			}
 
 			if (!RemoteUtil.directmime(mime) && dlna.getFormat().isAudio()) {
-				dlna.setPlayer(new FFmpegAudio());
+				dlna.setPlayer(PlayerFactory.getPlayer(PlayerId.FFMPEG_AUDIO));
 				code = 206;
 			}
 

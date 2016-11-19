@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.JComponent;
-import net.pms.PMS;
 import net.pms.configuration.DeviceConfiguration;
 import net.pms.configuration.PlatformExecutableInfo;
 import net.pms.configuration.PmsConfiguration;
@@ -23,6 +22,10 @@ import org.slf4j.LoggerFactory;
 public class RAWThumbnailer extends Player {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RAWThumbnailer.class);
 	public final static PlayerId ID = PlayerId.RAW_THUMBNAILER;
+
+	// Not to be instantiated by anything but PlayerFactory
+	RAWThumbnailer() {
+	}
 
 	protected String[] getDefaultArgs() {
 		return new String[]{ "-e", "-c" };
@@ -103,11 +106,10 @@ public class RAWThumbnailer extends Player {
 	// May also be called from launchTranscode
 	public static byte[] getThumbnail(OutputParams params, String fileName) throws IOException {
 		// Use device-specific pms conf
-		PmsConfiguration configuration = PMS.getConfiguration(params);
 		params.log = false;
 
 		String cmdArray[] = new String[4];
-		cmdArray[0] = configuration.getDCRawPath();
+		cmdArray[0] = PlayerFactory.getPlayerExecutable(PlayerId.RAW_THUMBNAILER);
 		cmdArray[1] = "-e";
 		cmdArray[2] = "-c";
 		cmdArray[3] = fileName;
