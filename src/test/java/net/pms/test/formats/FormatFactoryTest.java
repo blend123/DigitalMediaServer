@@ -101,6 +101,7 @@ public class FormatFactoryTest {
 		testSingleFormat("test.dff", "DSDAudio", Format.AUDIO);
 		testSingleFormat("test.dsf", "DSDAudio", Format.AUDIO);
 		testSingleFormat("test.dvr", "DVRMS", Format.VIDEO);
+		testSingleFormat("test.dvr-ms", "DVRMS", Format.VIDEO);
 		testSingleFormat("test.dts", "DTS", Format.AUDIO);
 		testSingleFormat("test.eac3", "EAC3", Format.AUDIO);
 		testSingleFormat("test.fla", "FLAC", Format.AUDIO);
