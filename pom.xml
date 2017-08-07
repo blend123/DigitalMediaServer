@@ -68,6 +68,12 @@
 		<url>https://github.com/DigitalMediaServer/DigitalMediaServer/issues</url>
 	</issueManagement>
 	<properties>
+		<!-- Main class of the project -->
+		<mainClass>net.pms.PMS</mainClass>
+
+		<!-- Short name of the project -->
+		<shortName>DMS</shortName>
+
 		<!-- NSIS needs a version without "-SNAPSHOT" or "-b1" -->
 		<project.version.short>0.0.1</project.version.short>
 		<cuelib-version>1.2.1-2008-06-13</cuelib-version>
@@ -92,6 +98,7 @@
 
 		<maven-javadoc-plugin-version>2.10.4</maven-javadoc-plugin-version>
 		<git-commit-id-plugin-version>2.2.2</git-commit-id-plugin-version>
+		<appbundle-maven-plugin-version>1.2.0</appbundle-maven-plugin-version>
 		<maven-assembly-plugin-version>3.0.0</maven-assembly-plugin-version>
 		<maven-enforcer-plugin-version>1.4.1</maven-enforcer-plugin-version>
 
@@ -127,6 +134,15 @@
 			<name>Sonatype OSS Repository</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 			<layout>default</layout>
+		</pluginRepository>
+		<pluginRepository>
+			<id>applauncher</id>
+			<name>appbundle-maven-plugin</name>
+			<url>https://github.com/federkasten/appbundle-maven-plugin</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
 	<repositories>
@@ -228,7 +244,7 @@
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
-			<version>[0.4, 0.5)</version>
+			<version>0.4.8</version>
 		</dependency>
 
 		<!--
@@ -597,6 +613,34 @@
 				</plugin>
 
 				<!--
+					This plugin's configuration is used to creates an Application Bundle for OS X containing all your project dependencies and the necessary
+				-->
+				<plugin>
+					<groupId>sh.tak.appbundler</groupId>
+					<artifactId>appbundle-maven-plugin</artifactId>
+					<version>${appbundle-maven-plugin-version}</version>
+					<configuration>
+						<mainClass>${project.mainClass}</mainClass>
+						<generateDiskImageFile>true</generateDiskImageFile>
+						<dictionaryFile>src/main/external-resources/osx/Info.plist-template.xml</dictionaryFile>
+						<iconFile>src/main/resources/images/logo.icns</iconFile>
+						<includeApplicationsSymlink>true</includeApplicationsSymlink>
+						<bundleName>${project.shortName}</bundleName>
+						<jvmVersion>1.7+</jvmVersion>
+						<jvmOptions>
+							<jvmOption>-Xmx768M</jvmOption>
+							<jvmOption>-Xss16M</jvmOption>
+							<jvmOption>-Dfile.encoding=UTF-8</jvmOption>
+							<jvmOption>-Djava.net.preferIPv4Stack=true</jvmOption>
+							<jvmOption>-Xdock:name=&quot;Digital Media Server&quot;</jvmOption>
+							<jvmOption>-XX:+UseParallelGC</jvmOption>
+						</jvmOptions>
+						<!--Provide JRE When Target Environment doesn't have it-->
+						<!--<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk</jrePath>-->
+					</configuration>
+				</plugin>
+
+				<!--
 					This plugin's configuration is used to run crowdin plugin from the command line,
 					it has no influence on the Maven build itself.
 				-->
@@ -762,6 +806,31 @@
 					<generateGitPropertiesFile>false</generateGitPropertiesFile>
 				</configuration>
 			</plugin>
+
+			<plugin>
+					<groupId>sh.tak.appbundler</groupId>
+					<artifactId>appbundle-maven-plugin</artifactId>
+					<version>${appbundle-maven-plugin-version}</version>
+					<configuration>
+						<mainClass>${project.mainClass}</mainClass>
+						<generateDiskImageFile>true</generateDiskImageFile>
+						<dictionaryFile>src/main/external-resources/osx/Info.plist-template.xml</dictionaryFile>
+						<iconFile>src/main/resources/images/logo.icns</iconFile>
+						<includeApplicationsSymlink>true</includeApplicationsSymlink>
+						<bundleName>${project.shortName}</bundleName>
+						<jvmVersion>1.7+</jvmVersion>
+						<jvmOptions>
+							<jvmOption>-Xmx768M</jvmOption>
+							<jvmOption>-Xss16M</jvmOption>
+							<jvmOption>-Dfile.encoding=UTF-8</jvmOption>
+							<jvmOption>-Djava.net.preferIPv4Stack=true</jvmOption>
+							<jvmOption>-Xdock:name=&quot;Digital Media Server&quot;</jvmOption>
+							<jvmOption>-XX:+UseParallelGC</jvmOption>
+						</jvmOptions>
+						<!--Provide JRE When Target Environment doesn't have it-->
+						<!--<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk</jrePath>-->
+					</configuration>
+				</plugin>
 
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -934,6 +1003,13 @@
 				</configuration>
 			</plugin>
 
+			<!-- AppBundler report -->
+			<plugin>
+					<groupId>sh.tak.appbundler</groupId>
+					<artifactId>appbundle-maven-plugin</artifactId>
+					<version>${appbundle-maven-plugin-version}</version>
+			</plugin>
+
 			<!-- Class dependency report -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -1027,7 +1103,7 @@
 								</descriptors>
 								<archive>
 									<manifest>
-										<mainClass>net.pms.PMS</mainClass>
+										<mainClass>${project.mainClass}</mainClass>
 										<!--
 											this is required to make the ImageIo image "plugins" provided by jai-imageio-core-standalone work.
 											without it, the following exception is thrown when DMS starts:
@@ -1249,7 +1325,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1269,7 +1345,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1320,6 +1396,59 @@
 											tofile="${project.basedir}/target/dms.jar" overwrite="true" />
 									</target>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!--
+			macOS profile: takes care of building the final DMG package for macOS
+		-->
+		<profile>
+			<id>macos</id>
+			<!--
+				this setting does the right thing on macOS
+			-->
+			<activation>
+				<os>
+					<family>mac</family>
+				</os>
+			</activation>
+
+			<build>
+				<finalName>${project.name}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>sh.tak.appbundler</groupId>
+						<artifactId>appbundle-maven-plugin</artifactId>
+						<version>${appbundle-maven-plugin-version}</version>
+						<configuration>
+							<mainClass>${project.mainClass}</mainClass>
+							<generateDiskImageFile>true</generateDiskImageFile>
+							<dictionaryFile>src/main/external-resources/osx/Info.plist-template.xml</dictionaryFile>
+							<iconFile>src/main/resources/images/logo.icns</iconFile>
+							<includeApplicationsSymlink>true</includeApplicationsSymlink>
+							<bundleName>${project.shortName}</bundleName>
+							<jvmVersion>1.7+</jvmVersion>
+							<jvmOptions>
+								<jvmOption>-Xmx768M</jvmOption>
+								<jvmOption>-Xss16M</jvmOption>
+								<jvmOption>-Dfile.encoding=UTF-8</jvmOption>
+								<jvmOption>-Djava.net.preferIPv4Stack=true</jvmOption>
+								<jvmOption>-Xdock:name=&quot;Digital Media Server&quot;</jvmOption>
+								<jvmOption>-XX:+UseParallelGC</jvmOption>
+							</jvmOptions>
+							<!--Provide JRE When Target Environment doesn't have it-->
+							<!--<jrePath>/Library/Java/JavaVirtualMachines/jdk1.8.0_141.jdk</jrePath>-->
+						</configuration>
+						<executions>
+							<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>bundle</goal>
+							</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -1434,18 +1563,18 @@
 								<configuration>
 									<target>
 										<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"
-											classpath="${basedir}/src/main/external-resources/lib/appbundler-1.3.DMS.jar"/>
+											classpath="${project.basedir}/src/main/external-resources/lib/appbundler-1.3.DMS.jar"/>
 										<bundleapp outputdirectory="${project.build.directory}/${project.build.finalName}-distribution"
 										           name="${project.name}"
 										           displayname="${project.name}"
-										           executableName="DMS"
-										           identifier="net.pms.PMS"
+										           executableName="${project.shortName}"
+										           identifier="${project.mainClass}"
 										           shortversion="${project.version.short}"
 										           version="${project.version}"
 										           icon="${project.basedir}/src/main/resources/images/logo.icns"
 										           applicationCategory="public.app-category.entertainment"
 										           workingdirectory="$APP_ROOT/Contents/Resources"
-										           mainclassname="net.pms.PMS">
+										           mainclassname="${project.mainClass}">
 											<!--<runtime dir="/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home"/>-->
 											<classpath file="${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar"/>
 											<option value="-Xmx768M"/>
@@ -1476,7 +1605,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1498,7 +1627,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1616,18 +1745,18 @@
 								<configuration>
 									<target>
 										<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"
-											classpath="${basedir}/src/main/external-resources/lib/appbundler-1.3.DMS.jar"/>
+											classpath="${project.basedir}/src/main/external-resources/lib/appbundler-1.3.DMS.jar"/>
 										<bundleapp outputdirectory="${project.build.directory}/${project.build.finalName}-distribution"
 										           name="${project.name}"
 										           displayname="${project.name}"
-										           executableName="DMS"
-										           identifier="net.pms.PMS"
+										           executableName="${project.shortName}"
+										           identifier="${project.mainClass}"
 										           shortversion="${project.version.short}"
 										           version="${project.version}"
 										           icon="${project.basedir}/src/main/resources/images/logo.icns"
 										           applicationCategory="public.app-category.entertainment"
 										           workingdirectory="$APP_ROOT/Contents/Resources"
-										           mainclassname="net.pms.PMS">
+										           mainclassname="${project.mainClass}">
 											<classpath file="${project.build.directory}/${project.build.finalName}-jar-with-dependencies.jar"/>
 											<option value="-Xmx768M"/>
 											<option value="-Xss16M"/>
@@ -1657,7 +1786,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1679,7 +1808,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1727,7 +1856,7 @@
 									</descriptors>
 									<archive>
 										<manifest>
-											<mainClass>net.pms.PMS</mainClass>
+											<mainClass>${project.mainClass}</mainClass>
 											<addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- see above for documentation -->
 										</manifest>
 									</archive>
@@ -1785,7 +1914,7 @@
 								</goals>
 								<configuration>
 									<classpathScope>test</classpathScope>
-									<mainClass>net.pms.PMS</mainClass>
+									<mainClass>${project.mainClass}</mainClass>
 								</configuration>
 							</execution>
 						</executions>
