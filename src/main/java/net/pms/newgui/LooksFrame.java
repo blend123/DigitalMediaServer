@@ -420,7 +420,7 @@ public class LooksFrame extends JFrame implements IFrame {
 		}
 
 		restartIcon = (AnimatedIcon) reload.getIcon();
-		restartRequredIcon.start();
+		restartRequredIcon.startArm();
 		setReloadable(false);
 		reload.addActionListener(new ActionListener() {
 			@Override
