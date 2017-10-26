@@ -26,30 +26,30 @@ import javax.swing.UIManager;
 import net.pms.newgui.LooksFrame;
 import net.pms.newgui.components.AnimatedIcon.AnimatedIconStage;
 
-public class JImageButton extends JButton implements AnimatedIconCallback {
+public class ImageButton extends JButton implements AnimatedIconCallback {
 
 	private static final long serialVersionUID = 8120596501408171329L;
 
-	public JImageButton(String text, String iconName) {
+	public ImageButton(String text, String iconName) {
 		super(text, null);
 		setProperites();
 		setIcons(iconName);
 	}
 
-	public JImageButton(String iconName) {
+	public ImageButton(String iconName) {
 		this(null, iconName);
 	}
 
-	public JImageButton() {
+	public ImageButton() {
 		this(null, (String) null);
 	}
 
-	public JImageButton(String text, Icon icon) {
+	public ImageButton(String text, Icon icon) {
 		super(text, icon);
 		setProperites();
 	}
 
-	public JImageButton(Icon icon) {
+	public ImageButton(Icon icon) {
 		super(icon);
 		setProperites();
 	}
@@ -76,7 +76,7 @@ public class JImageButton extends JButton implements AnimatedIconCallback {
 	 *                        button is in the normal state and which
 	 *                        the other state names are derived from.
 	 *
-	 * @see JAnimatedButton#setIcons(String)
+	 * @see AnimatedButton#setIcons(String)
 	 */
 	protected void setIcons(String defaultIconName) {
 		if (defaultIconName == null) {
