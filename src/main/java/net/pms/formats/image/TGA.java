@@ -1,5 +1,7 @@
 package net.pms.formats.image;
 
+import net.pms.dlna.protocolinfo.MimeType;
+
 /**
  * A representation of the Truevision Targa Graphic file format.
  *
@@ -7,17 +9,11 @@ package net.pms.formats.image;
  */
 public class TGA extends ImageBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Identifier getIdentifier() {
 		return Identifier.TGA;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getSupportedExtensions() {
 		return new String[] {
@@ -29,7 +25,7 @@ public class TGA extends ImageBase {
 	}
 
 	@Override
-	public String mimeType() {
+	public MimeType mimeType() {
 		/*
 		 * application/tga,
 		 * application/x-tga,
@@ -39,7 +35,7 @@ public class TGA extends ImageBase {
 		 * image/targa,
 		 * image/x-targa
 		 */
-		return "image/x-tga";
+		return MimeType.FACTORY.createMimeType("image","x-tga");
 	}
 
 }

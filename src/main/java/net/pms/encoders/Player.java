@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import net.pms.PMS;
 import net.pms.configuration.PmsConfiguration;
@@ -30,6 +32,8 @@ import net.pms.dlna.DLNAMediaAudio;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAMediaSubtitle;
 import net.pms.dlna.DLNAResource;
+import net.pms.dlna.MediaType;
+import net.pms.dlna.protocolinfo.MimeType;
 import net.pms.formats.Format;
 import net.pms.io.OutputParams;
 import net.pms.io.ProcessWrapper;
@@ -79,8 +83,6 @@ public abstract class Player {
 	// it's entirely up to engines how they construct their command lines.
 	// need to get rid of this
 	public abstract String[] args();
-
-	public abstract String mimeType();
 	public abstract String executable();
 	protected static final PmsConfiguration _configuration = PMS.getConfiguration();
 	protected PmsConfiguration configuration = _configuration;
@@ -107,6 +109,30 @@ public abstract class Player {
 
 	public boolean isTimeSeekable() {
 		return false;
+	}
+
+	/**
+	 * Resolves the {@link MimeType} for this {@link Player} for the specified
+	 * {@link RendererConfiguration}.
+	 *
+	 * @param resource the {@link DLNAResource} for which to resolve the
+	 *            {@link MimeType}.
+	 * @param renderer the {@link RendererConfiguration} to resolve for.
+	 * @return The resolved {@link MimeType} or {@code null}.
+	 */
+	@Nullable
+	public MimeType getMimeType(@Nullable DLNAResource resource, @Nullable RendererConfiguration renderer) {
+		if (resource == null) {
+			return null;
+		}
+		MediaType mediaType = resource.getMediaType();
+		MimeType mimeType;
+		if (renderer != null) {
+			mimeType = renderer.getDefaultTranscodeMimeType(mediaType);
+		} else {
+			mimeType = getDefaultMimeType(mediaType);
+		}
+		return mimeType;
 	}
 
 	/**
@@ -207,6 +233,28 @@ public abstract class Player {
 	@Deprecated
 	public void setAudioAndSubs(String fileName, DLNAMediaInfo media, OutputParams params, PmsConfiguration configuration) {
 		setAudioAndSubs(fileName, media, params);
+	}
+
+	/**
+	 * Gets the default {@link MimeType} for the specified {@link MediaType}.
+	 *
+	 * @param mediaType the {@link MediaType} for which to get the default
+	 *            {@link MimeType}.
+	 * @return The default {@link MimeType} or {@code null}.
+	 */
+	@Nullable
+	public static MimeType getDefaultMimeType(@Nonnull MediaType mediaType) {
+		switch (mediaType) {
+			case AUDIO:
+				return MimeType.FACTORY.audioDefault;
+			case IMAGE:
+				return MimeType.FACTORY.imageDefault;
+			case VIDEO:
+				return MimeType.FACTORY.videoDefault;
+			case UNKNOWN:
+			default:
+				return null;
+		}
 	}
 
 	/**

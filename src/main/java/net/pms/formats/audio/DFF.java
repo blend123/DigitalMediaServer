@@ -18,6 +18,9 @@
  */
 	package net.pms.formats.audio;
 
+import net.pms.dlna.protocolinfo.MimeType;
+import net.pms.dlna.protocolinfo.KnownMimeTypes;
+
 	public class DFF extends AudioBase {
 
 		@Override
@@ -28,5 +31,10 @@
 		@Override
 		public String[] getSupportedExtensions() {
 			return new String[] { "dff" };
+		}
+
+		@Override
+		public MimeType mimeType() {
+			return KnownMimeTypes.DFF;
 		}
 	}

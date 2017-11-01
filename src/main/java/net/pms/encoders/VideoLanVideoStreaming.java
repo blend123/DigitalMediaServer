@@ -22,11 +22,16 @@ import com.sun.jna.Platform;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import net.pms.configuration.DeviceConfiguration;
 import net.pms.configuration.PmsConfiguration;
+import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAResource;
+import net.pms.dlna.MediaType;
+import net.pms.dlna.protocolinfo.MimeType;
+import net.pms.dlna.protocolinfo.KnownMimeTypes;
 import net.pms.formats.Format;
 import net.pms.io.OutputParams;
 import net.pms.io.PipeProcess;
@@ -71,9 +76,16 @@ public class VideoLanVideoStreaming extends Player {
 		return Format.VIDEO;
 	}
 
+	@Nullable
 	@Override
-	public String mimeType() {
-		return "video/mpeg";
+	public MimeType getMimeType(@Nullable DLNAResource resource, @Nullable RendererConfiguration renderer) {
+		if (resource == null) {
+			return null;
+		}
+		if (resource.getMediaType() == MediaType.VIDEO) {
+			return KnownMimeTypes.MPEG;
+		}
+		return super.getMimeType(resource, renderer);
 	}
 
 	@Override

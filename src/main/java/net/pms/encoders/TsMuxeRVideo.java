@@ -29,6 +29,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.annotation.Nullable;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -38,6 +39,8 @@ import net.pms.configuration.DeviceConfiguration;
 import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.*;
+import net.pms.dlna.protocolinfo.MimeType;
+import net.pms.dlna.protocolinfo.KnownMimeTypes;
 import net.pms.formats.Format;
 import net.pms.io.*;
 import net.pms.newgui.GuiUtil;
@@ -688,9 +691,17 @@ public class TsMuxeRVideo extends Player {
 		return p;
 	}
 
+	@Nullable
 	@Override
-	public String mimeType() {
-		return "video/mpeg";
+	public MimeType getMimeType(@Nullable DLNAResource resource, @Nullable RendererConfiguration renderer) {
+		if (resource == null) {
+			return null;
+		}
+		if (resource.getMediaType() == MediaType.VIDEO) {
+			//TODO: (Nad) Bug?
+			return KnownMimeTypes.MPEG_TS;
+		}
+		return super.getMimeType(resource, renderer);
 	}
 
 	@Override

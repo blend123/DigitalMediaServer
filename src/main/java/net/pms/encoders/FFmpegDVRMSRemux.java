@@ -37,6 +37,8 @@ import net.pms.configuration.PmsConfiguration;
 import net.pms.configuration.RendererConfiguration;
 import net.pms.dlna.DLNAMediaInfo;
 import net.pms.dlna.DLNAResource;
+import net.pms.dlna.protocolinfo.MimeType;
+import net.pms.dlna.protocolinfo.KnownMimeTypes;
 import net.pms.formats.Format;
 import net.pms.io.OutputParams;
 import net.pms.io.ProcessWrapper;
@@ -97,11 +99,6 @@ public class FFmpegDVRMSRemux extends Player {
 	public String[] args() {
 		return getDefaultArgs();
 
-	}
-
-	@Override
-	public String mimeType() {
-		return "video/mpeg";
 	}
 
 	@Override
@@ -211,5 +208,10 @@ public class FFmpegDVRMSRemux extends Player {
 		}
 
 		return false;
+	}
+
+	@Override
+	public MimeType getMimeType(DLNAResource resource, RendererConfiguration renderer) {
+		return KnownMimeTypes.MPEG;
 	}
 }

@@ -1,5 +1,7 @@
 package net.pms.formats.image;
 
+import net.pms.dlna.protocolinfo.MimeType;
+
 
 /**
  * A representation of the Apple PICT format.
@@ -8,17 +10,11 @@ package net.pms.formats.image;
  */
 public class PICT extends ImageBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Identifier getIdentifier() {
 		return Identifier.PICT;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getSupportedExtensions() {
 		return new String[] {
@@ -29,7 +25,7 @@ public class PICT extends ImageBase {
 	}
 
 	@Override
-	public String mimeType() {
-		return "image/x-pict";
+	public MimeType mimeType() {
+		return MimeType.FACTORY.createMimeType("image","x-pict");
 	}
 }

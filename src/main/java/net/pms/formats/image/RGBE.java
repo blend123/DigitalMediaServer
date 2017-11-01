@@ -1,5 +1,7 @@
 package net.pms.formats.image;
 
+import net.pms.dlna.protocolinfo.MimeType;
+
 /**
  * A representation of the former Radiance HDR now known as RGBE format.
  *
@@ -7,17 +9,11 @@ package net.pms.formats.image;
  */
 public class RGBE extends ImageBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Identifier getIdentifier() {
 		return Identifier.RGBE;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getSupportedExtensions() {
 		return new String[] {
@@ -29,7 +25,7 @@ public class RGBE extends ImageBase {
 	}
 
 	@Override
-	public String mimeType() {
-		return "image/vnd.radiance";
+	public MimeType mimeType() {
+		return MimeType.FACTORY.createMimeType("image","vnd.radiance");
 	}
 }

@@ -1,5 +1,7 @@
 package net.pms.formats.image;
 
+import net.pms.dlna.protocolinfo.MimeType;
+
 /**
  * A representation of the Interchange File Format.
  *
@@ -7,17 +9,11 @@ package net.pms.formats.image;
  */
 public class IFF extends ImageBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Identifier getIdentifier() {
 		return Identifier.IFF;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getSupportedExtensions() {
 		return new String[] {
@@ -26,13 +22,13 @@ public class IFF extends ImageBase {
 	}
 
 	@Override
-	public String mimeType() {
+	public MimeType mimeType() {
 		/*
 		 * application/iff
 		 * application/x-iff
 		 * image/iff
 		 * image/x-iff
 		 */
-		return "image/iff";
+		return MimeType.FACTORY.createMimeType("image","iff");
 	}
 }

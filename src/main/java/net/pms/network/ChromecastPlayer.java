@@ -35,7 +35,7 @@ public class ChromecastPlayer extends BasicPlayer.Logical {
 			}
 			try {
 				api.launchApp(MediaPlayer);
-				api.load("", null, item.uri, r.mimeType());
+				api.load("", null, item.uri, r.getMimeType(renderer).toString());
 			} catch (IOException e) {
 				LOGGER.debug("Bad chromecast load: " + e);
 			}
@@ -69,6 +69,7 @@ public class ChromecastPlayer extends BasicPlayer.Logical {
 		}
 	}
 
+	@Override
 	public void forward() {
 		try {
 			api.seek(60);

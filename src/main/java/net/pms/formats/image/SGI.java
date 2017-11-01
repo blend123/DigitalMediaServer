@@ -1,5 +1,7 @@
 package net.pms.formats.image;
 
+import net.pms.dlna.protocolinfo.MimeType;
+
 /**
  * A representation of the Silicon Graphics SGI image format, also known as RLE
  * or Haeberli.
@@ -8,17 +10,11 @@ package net.pms.formats.image;
  */
 public class SGI extends ImageBase {
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public Identifier getIdentifier() {
 		return Identifier.SGI;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String[] getSupportedExtensions() {
 		return new String[] {
@@ -28,12 +24,12 @@ public class SGI extends ImageBase {
 	}
 
 	@Override
-	public String mimeType() {
+	public MimeType mimeType() {
 		/*
 		 * image/sgi,
 		 * image/x-sgi,
 		 * image/x-sgi-rgba
 		 */
-		return "image/sgi";
+		return MimeType.FACTORY.createMimeType("image","sgi");
 	}
 }
