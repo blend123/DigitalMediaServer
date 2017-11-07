@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -45,8 +46,10 @@ import net.pms.newgui.StatusTab.ConnectionState;
 import net.pms.newgui.components.AnimatedIcon;
 import net.pms.newgui.components.AnimatedIcon.AnimatedIconStage;
 import net.pms.newgui.components.AnimatedIcon.AnimatedIconType;
+import net.pms.newgui.components.WindowProperties.WindowPropertiesConfiguration;
 import net.pms.newgui.components.JAnimatedButton;
 import net.pms.newgui.components.JImageButton;
+import net.pms.newgui.components.WindowProperties;
 import net.pms.util.PropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +59,7 @@ public class LooksFrame extends JFrame implements IFrame {
 
 	private final PmsConfiguration configuration;
 	public static final String START_SERVICE = "start.service";
+	private final WindowProperties windowProperties;
 	private static final long serialVersionUID = 8723727186288427690L;
 	private Dimension storedWindowSize = new Dimension();
 	private Dimension storedScreenSize = new Dimension();
@@ -195,9 +199,14 @@ public class LooksFrame extends JFrame implements IFrame {
 	 * Constructs a <code>DemoFrame</code>, configures the UI,
 	 * and builds the content.
 	 */
-	public LooksFrame(PmsConfiguration configuration) {
+	public LooksFrame(@Nonnull PmsConfiguration configuration, @Nonnull WindowPropertiesConfiguration windowConfiguration) {
+		super(windowConfiguration.getGraphicsConfiguration());
+		if (configuration == null) {
+			throw new IllegalArgumentException("configuration can't be null");
+		}
+		setResizable(true);
+		windowProperties = new WindowProperties(this, STANDARD_SIZE, MINIMUM_SIZE, windowConfiguration);
 		this.configuration = configuration;
-		assert this.configuration != null;
 		Options.setDefaultIconSize(new Dimension(18, 18));
 		Options.setUseNarrowButtons(true);
 
@@ -318,46 +327,47 @@ public class LooksFrame extends JFrame implements IFrame {
 
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		if (screenSize.width < MINIMUM_SIZE.width || screenSize.height < MINIMUM_SIZE.height) {
-			setMinimumSize(screenSize);
-		} else {
-			setMinimumSize(MINIMUM_SIZE);
-		}
-
-		String ss = configuration.getScreenSize();
-		storedScreenSize.height = Integer.parseInt(ss.substring(ss.indexOf('x') + 1));
-		storedScreenSize.width = Integer.parseInt(ss.substring(0, ss.indexOf('x')));
-		String[] windowGeometryValues = configuration.getWindowGeometry().split(",");
-		int posX = Integer.parseInt(windowGeometryValues[0].substring(windowGeometryValues[0].indexOf('=') + 1));
-		int posY = Integer.parseInt(windowGeometryValues[1].substring(windowGeometryValues[1].indexOf('=') + 1));
-		storedWindowSize.width = Integer.parseInt(windowGeometryValues[2].substring(windowGeometryValues[2].indexOf('=') + 1));
-		storedWindowSize.height = Integer.parseInt(windowGeometryValues[3].substring(windowGeometryValues[3].indexOf('=') + 1));
-		setSize(storedWindowSize);
-		boolean screenChanged = false;
-		if (storedScreenSize.width != screenSize.getWidth() || storedScreenSize.height != screenSize.getHeight()) {
-			setSize(STANDARD_SIZE);
-			screenChanged = true;
-		} else if (configuration.getWindowExtendedState() != NORMAL) {
-			setExtendedState(configuration.getWindowExtendedState());
-		} else if (screenSize.width < storedWindowSize.width || screenSize.height < storedWindowSize.height) {
-			setSize(screenSize);
-		}
+//		if (screenSize.width < MINIMUM_SIZE.width || screenSize.height < MINIMUM_SIZE.height) { //TODO: (Nad) Remove commented code
+//			setMinimumSize(screenSize);
+//		} else {
+//			setMinimumSize(MINIMUM_SIZE);
+//		}
 
 		// Display tooltips immediately and for a long time
 		ToolTipManager.sharedInstance().setInitialDelay(400);
 		ToolTipManager.sharedInstance().setDismissDelay(60000);
 		ToolTipManager.sharedInstance().setReshowDelay(400);
 
-		setResizable(true);
-		Dimension paneSize = getSize();
-		if (posX == -1 && posY == -1 || screenChanged) { // first run of DMS or screen/desktop was changed so set the position to the middle of the screen
-			setLocation(
-			((screenSize.width > paneSize.width) ? ((screenSize.width - paneSize.width) / 2) : 0),
-			((screenSize.height > paneSize.height) ? ((screenSize.height - paneSize.height) / 2) : 0)
-			);
-		} else {
-			setLocation(posX, posY);
-		}
+//		String ss = configuration.getScreenSize();
+//		storedScreenSize.height = Integer.parseInt(ss.substring(ss.indexOf('x') + 1));
+//		storedScreenSize.width = Integer.parseInt(ss.substring(0, ss.indexOf('x')));
+//		String[] windowGeometryValues = configuration.getWindowGeometry().split(",");
+//		int posX = Integer.parseInt(windowGeometryValues[0].substring(windowGeometryValues[0].indexOf('=') + 1));
+//		int posY = Integer.parseInt(windowGeometryValues[1].substring(windowGeometryValues[1].indexOf('=') + 1));
+//		storedWindowSize.width = Integer.parseInt(windowGeometryValues[2].substring(windowGeometryValues[2].indexOf('=') + 1));
+//		storedWindowSize.height = Integer.parseInt(windowGeometryValues[3].substring(windowGeometryValues[3].indexOf('=') + 1));
+//		setSize(storedWindowSize);
+//		boolean screenChanged = false;
+//		getGraphicsConfiguration().getDevice().getIDstring();
+//		getGraphicsConfiguration().getBounds();
+//		if (storedScreenSize.width != screenSize.getWidth() || storedScreenSize.height != screenSize.getHeight()) {
+//			setSize(STANDARD_SIZE);
+//			screenChanged = true;
+//		} else if (configuration.getWindowExtendedState() != NORMAL) { //TODO: (Nad) Here
+//			setExtendedState(configuration.getWindowExtendedState());
+//		} else if (screenSize.width < storedWindowSize.width || screenSize.height < storedWindowSize.height) {
+//			setSize(screenSize);
+//		}
+
+//		Dimension paneSize = getSize();
+//		if (posX == -1 && posY == -1 || screenChanged) { // first run of DMS or screen/desktop was changed so set the position to the middle of the screen
+//			setLocation(
+//			((screenSize.width > paneSize.width) ? ((screenSize.width - paneSize.width) / 2) : 0),
+//			((screenSize.height > paneSize.height) ? ((screenSize.height - paneSize.height) / 2) : 0)
+//			);
+//		} else {
+//			setLocation(posX, posY);
+//		}
 
 		if (!configuration.isMinimized() && System.getProperty(START_SERVICE) == null) {
 			setVisible(true);
@@ -542,7 +552,7 @@ public class LooksFrame extends JFrame implements IFrame {
 			if (getExtendedState() != NORMAL) {
 				configuration.setWindowExtendedState(getExtendedState());
 			} else {
-				configuration.setWindowExtendedState(NORMAL);
+				configuration.setWindowExtendedState(NORMAL); //TODO (Nad) Here, save
 				configuration.setWindowGeometry(windowGeometry.substring(windowGeometry.indexOf('[') + 1, windowGeometry.indexOf(']')));
 			}
 			configuration.setScreenSize((int) screenSize.getWidth() + "x" + (int) screenSize.getHeight());

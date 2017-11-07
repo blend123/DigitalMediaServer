@@ -289,7 +289,7 @@ public class PmsConfiguration extends RendererConfiguration {
 	protected static final String KEY_RESUME_REWIND = "resume_rewind";
 	protected static final String KEY_ROOT_LOG_LEVEL = "log_level";
 	protected static final String KEY_RUN_WIZARD = "run_wizard";
-	protected static final String KEY_SCREEN_SIZE = "screen_size";
+	protected static final String KEY_SCREEN_SIZE = "screen_size"; //TODO: (Nad) Remove
 	protected static final String KEY_SCRIPT_DIR = "script_dir";
 	protected static final String KEY_SEARCH_FOLDER = "search_folder";
 	protected static final String KEY_SEARCH_IN_FOLDER = "search_in_folder";
@@ -364,8 +364,8 @@ public class PmsConfiguration extends RendererConfiguration {
 	protected static final String KEY_WEB_THREADS = "web_threads";
 	protected static final String KEY_WEB_TRANSCODE = "web_transcode";
 	protected static final String KEY_WEB_WIDTH = "web_width";
-	protected static final String KEY_WINDOW_EXTENDED_STATE = "window_extended_state";
-	protected static final String KEY_WINDOW_GEOMETRY = "window_geometry";
+	protected static final String KEY_WINDOW_EXTENDED_STATE = "window_extended_state"; //TODO (Nad) Remove
+	protected static final String KEY_WINDOW_GEOMETRY = "window_geometry"; //TODO: (Nad) Remove
 	protected static final String KEY_X264_CONSTANT_RATE_FACTOR = "x264_constant_rate_factor";
 
 	// Deprecated settings
